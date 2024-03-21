@@ -30,5 +30,3 @@ if __name__ == "__main__":
     except Exception as e:
         logger.info("Divide by Zero")
         raise CustomException(e, sys)
-    
-    
