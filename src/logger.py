@@ -27,7 +27,4 @@ logger.addHandler(console_handler)
 
 # Check if above code works
 if __name__ == "__main__":
-    logger.info('This is a log message.')
-
-
-
+    logger.info('This is a log message')
