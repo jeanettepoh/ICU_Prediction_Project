@@ -11,16 +11,27 @@ from src.logger import logger
 
 @dataclass
 class DataIngestionConfig:
-    raw_data_path: str=os.path.join("artifacts", "raw_data.csv")
-    train_data_path: str=os.path.join("artifacts", "train_data.csv")
-    test_data_path: str=os.path.join("artifacts", "test_data.csv")
+    """
+    Provides the parameters for DataIngestion
+    """
+    raw_data_path: str=os.path.join("data", "raw_data.csv")
+    train_data_path: str=os.path.join("data", "train_data.csv")
+    test_data_path: str=os.path.join("data", "test_data.csv")
 
 
 class DataIngestion:
+    """
+    Ingests the raw data and divides it into training and testing sets
+    """
     def __init__(self):
         self.ingestion_config = DataIngestionConfig()
 
     def initiate_data_ingestion(self):
+        """
+        This class method performs some minor preprocessing steps on the 
+        dataframe columns upon reading the raw data,followed by train-test-split.
+        It returns the file paths to the training and testing sets. 
+        """
         logger.info("Data Ingestion started")
         try:
             df = pd.read_csv(self.ingestion_config.raw_data_path)
@@ -41,7 +52,7 @@ class DataIngestion:
 
             # Generation of training and testing data
             train_df, test_df = train_test_split(
-                df, test_size=0.2, stratify=df['survive'], random_state=24)
+                df, test_size=0.25, stratify=df['survive'], random_state=24)
 
             train_df.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
             test_df.to_csv(self.ingestion_config.test_data_path, index=False, header=True)

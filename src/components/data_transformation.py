@@ -18,17 +18,32 @@ from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
+    """
+    Provides the parameters for DataTransformation
+    """
     numerical_columns = ["age", "pulse", "sysbp"]
     categorical_columns = ["sex", "infection", "emergency"]
     preprocessor_obj_file_path = os.path.join("artifacts", "preprocessor.pkl")
 
 
 class DataTransformation:
+    """
+    Performs data preprocessing on training and testing datasets separately
+    """
     def __init__(self):
         self.transformation_config = DataTransformationConfig()
 
     def get_data_transformation_obj(self):   
+        """
+        Creates separate preprocessing pipelines for numerical and categorical features,
+        combines these pipelines and returns the resulting preprocessor object
+        """
         try:
+            os.makedirs(
+                os.path.dirname(self.transformation_config.preprocessor_obj_file_path), 
+                exist_ok=True
+            )
+
             numerical_pipeline = Pipeline(
                 steps=[
                 ("scaler", StandardScaler())
@@ -59,6 +74,20 @@ class DataTransformation:
 
 
     def address_target_class_imbalance(self, categorical_indices, X_train, y_train):
+        """
+        Applies SMOTENC oversampling on training data to address target class imbalance
+
+        Parameters
+        ----------
+            categorical_indices: Column indices of categorical features
+            X_train: Training data input
+            y_train: Training data outcome
+
+        Returns
+        -------
+            X_train: Resampled training data input
+            y_train: Resampled training data outcome
+        """
         try:
             old_counter = Counter(y_train)
             for target_class, count in old_counter.items():
@@ -79,6 +108,22 @@ class DataTransformation:
 
 
     def initiate_data_transformation(self, train_data_path, test_data_path):
+        """
+        Applies preprocessing object on training and testing data,
+        and performs SMOTENC on training data
+
+        Parameters
+        ----------
+            train_data_path: File path to access training dataset
+            test_data_path: File path to access testing dataset
+
+        Returns
+        -------
+            X_train: Preprocessed training data input
+            X_test: Preprocessed testing data input
+            y_train: Preprocessed training data outcome
+            y_test: Preprocessed testing data outcome
+        """
         try:
             train_df = pd.read_csv(train_data_path)
             test_df = pd.read_csv(test_data_path)
@@ -91,7 +136,7 @@ class DataTransformation:
             X_train = train_df.loc[:, train_df.columns != 'survive']
             y_train = train_df['survive']
             X_test = test_df.loc[:, test_df.columns != 'survive']
-            y_test = train_df['survive']
+            y_test = test_df['survive']
 
             logger.info("Getting indices of categorical columns for SMOTENC")
             categorical_indices = [X_train.columns.get_loc(col) for col in self.transformation_config.categorical_columns]
@@ -122,7 +167,7 @@ class DataTransformation:
 
 # Check if above code works
 if __name__ == "__main__":
-
+    
     from src.components.data_ingestion import DataIngestion
     data_ingestion = DataIngestion()
     train_data_path, test_data_path = data_ingestion.initiate_data_ingestion()
