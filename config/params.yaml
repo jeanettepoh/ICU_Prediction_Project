@@ -1,0 +1,32 @@
+Logistic Regression:
+  penalty: 
+    - l2
+  C:
+    - 0.05
+    - 0.10
+    - 0.15
+    - 0.20
+
+Decision Tree:
+  criterion: 
+    - gini
+    - entropy
+    - log_loss
+  splitter:
+    - best
+    - random
+  max_depth:
+    - 3
+    - 5
+    - 7
+    - 10
+
+Random Forest:
+  criterion:
+    - gini
+    - entropy
+  n_estimators: 
+    - 8
+    - 16
+    - 32
+    
