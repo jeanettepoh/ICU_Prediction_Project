@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICU Patient Survival Indicator</title>
+    <!-- Include Bootstrap CSS for styling -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ url_for('predict_datapoint')}}" method="post">
+                            <h2 class="mb-4 text-center">ICU Mortality Prediction</h2>
+                            <div class="form-group">
+                                <label for="age">Age:</label>
+                                <input class="form-control" type="number" name="age" id="age" placeholder="Enter your Age" min="0" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">Sex:</label>
+                                <select class="form-control" name="sex" id="sex" required>
+                                    <option value="" selected disabled>Select Sex</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="infection">Infection:</label>
+                                <select class="form-control" name="infection" id="infection" required>
+                                    <option value="" selected disabled>Select Infection</option>
+                                    <option value="Not Infected">Not Infected</option>
+                                    <option value="Infected">Infected</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sysbp">Systemic Blood Pressure:</label>
+                                <input class="form-control" type="number" name="sysbp" id="sysbp" placeholder="Enter your Systemic Blood Pressure" min="0" max="300" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pulse">Pulse rate:</label>
+                                <input class="form-control" type="number" name="pulse" id="pulse" placeholder="Enter your Pulse rate" min="0" max="300" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="emergency">Emergency:</label>
+                                <select class="form-control" name="emergency" id="emergency" required>
+                                    <option value="" selected disabled>Select Emergency</option>
+                                    <option value="No Emergency">No Emergency</option>
+                                    <option value="Emergency">Emergency</option>
+                                </select>
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary" type="submit">Predict your Survival</button>
+                            </div>
+                        </form>
+                        <h2 class="text-center">{{ results }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
